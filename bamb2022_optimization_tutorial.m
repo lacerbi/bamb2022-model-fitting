@@ -1,6 +1,7 @@
 %% Tutorial for "Introduction to Optimization for Statistical model fitting"
 % BAMB! Summer School - Day 2 (September 2022)
 % by Luigi Acerbi (2022)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Add utility folder to MATLAB path
 baseFolder = fileparts(which('bamb2022_optimization_tutorial.m'));
@@ -21,14 +22,14 @@ addpath([baseFolder,filesep(),'utils']);
 % preprocessed into two `.csv` files, one for the training sessions 
 % (`KS014_train.csv`) and one with the *biased* sessions (`KS014_biased.csv`). 
 % 
-% We begin our tutorial by examining the training sessions. 
+% In this tutorial, we will use the training sessions. 
 
 filename = './data/KS014_train.csv';
 data = csvread(filename,1);
 % We add a last column to represent "signed contrasts"
 data = [data, data(:,4).*data(:,5)];
 
-% The columns of 'data' are now:
+% The columns of 'data' are now (each row is a trial):
 % 1. trial_num
 % 2. session_num
 % 3. stim_probability   (unused in training sessions)
@@ -37,14 +38,15 @@ data = [data, data(:,4).*data(:,5)];
 % 6. response_choice    (-1 left, 1 right)
 % 7. trial_correct      (1 yes, 0 no)
 % 8. reaction_time      (seconds)
-% 9. signed contrasts
+% 9. signed contrasts   (from -100 to 100)
 
 fprintf('Loaded file %s.\n', filename);
 fprintf('Total # of trials: %d\n', size(data,1));
 fprintf('Sessions: %s\n', mat2str(unique(data(:,2))'));
 data(1:5,:)
 
-%% Inspecting the data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% I. Inspecting the data
 
 % The first thing to do with any dataset is to get familiar with it by 
 % running simple visualizations. Just plot stuff!
@@ -56,7 +58,8 @@ plot_psychometric_data(data, 2);
 subplot(1,2,2);
 plot_psychometric_data(data, 15);
 
-%% Psychometric function model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% II. Psychometric function model
 
 % Now let's try plotting the psychometric function model for different 
 % values of the parameters (use both the symmetric and asymmetric 
@@ -74,7 +77,8 @@ hold on;
 psychofun_plot(theta0);
 legend('Location','NorthWest','Box','off','FontSize',12);
 
-%% Psychometric function log-likelihood
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% III. Psychometric function log-likelihood
 
 % The psychofun_loglike.m file defines the log likelihood function of the 
 % psychometric function model for a given dataset and model parameter 
@@ -99,13 +103,14 @@ psychofun_plot(theta0);
 legend('Location','NorthWest','Box','off','FontSize',12);
 text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
 
-%% Maximum-likelihood estimation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% IV. Maximum-likelihood estimation
 
 % In this section, we are going to estimate model parameters (aka fit our 
 % models) by maximizing the log-likelihood. By convention in optimization, 
 % we are going to minimize the negative log-likelihood.
 
-% Before running the optimization, we define the hard lower and upper 
+% Before running the optimization, we define the "hard" lower and upper 
 % bounds for the parameters. If the optimization algorithm supports 
 % constrained (bound) optimization, it will never go outside the hard bounds. 
 % We also define informally the "plausible" bounds as the range of 
@@ -142,10 +147,12 @@ options = bads('defaults');
 options.Display = 'iter';
 
 % Run optimization
-[theta,fval] = bads(opt_fun,theta0,lb,ub,plb,pub,options);
+fprintf('\nOptimization using Bayesian Adaptive Direct Search (BADS):\n');
+[theta,fval,~,output] = bads(opt_fun,theta0,lb,ub,plb,pub,options);
 
 fprintf('Returned parameter vector: %s\n', mat2str(theta,3));
-fprintf('Negative log-likelihood at solution: %s', num2str(fval));
+fprintf('Negative log-likelihood at solution: %s\n', num2str(fval));
+fprintf('Total # function evaluations: %d\n', output.funccount);
 
 close all;
 figure(1);
@@ -154,3 +161,23 @@ hold on;
 psychofun_plot(theta);
 legend('Location','NorthWest','Box','off','FontSize',12);
 text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% V. Maximum-likelihood estimation with other optimizers
+
+% While BADS is a good general-purpose optimization algorithm, you may want
+% to try other ones. Here we try fmincon.
+
+% Set fmincon options
+options = optimoptions('fmincon');
+options.Display = 'iter';
+
+% Run optimization
+fprintf('\nOptimization using FMINCON:\n');
+[theta,fval,~,output] = fmincon(opt_fun,theta0,[],[],[],[],lb,ub,[],options);
+
+fprintf('Returned parameter vector: %s\n', mat2str(theta,3));
+fprintf('Negative log-likelihood at solution: %s\n', num2str(fval));
+fprintf('Total # function evaluations: %d\n', output.funcCount);
+
+

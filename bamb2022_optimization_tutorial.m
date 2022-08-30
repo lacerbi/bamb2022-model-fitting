@@ -74,7 +74,11 @@ close all;
 figure(1);
 plot_psychometric_data(data,session_num);
 hold on;
-psychofun_plot(theta0);
+
+stim = linspace(-100,100,201);      % Create stimulus grid for plotting    
+p_right = psychofun(theta0,stim);   % Compute psychometric function values
+plot(stim,p_right,'LineWidth',1,'Color','k','DisplayName','model');
+
 legend('Location','NorthWest','Box','off','FontSize',12);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,7 +103,8 @@ close all;
 figure(1);
 plot_psychometric_data(data,session_num);
 hold on;
-psychofun_plot(theta0);
+p_right = psychofun(theta0,stim);   % Compute psychometric function values
+plot(stim,p_right,'LineWidth',1,'Color','k','DisplayName','model');
 legend('Location','NorthWest','Box','off','FontSize',12);
 text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
 
@@ -135,7 +140,9 @@ session_data = data(data(:,2) == session_num,:);
 % Define objective function: negative log-likelihood
 opt_fun = @(theta_) -psychofun_loglike(theta_,session_data);
 
-% We are now going to run a black-box optimization algorithm called BADS. 
+% We are now going to run a black-box optimization algorithm called 
+% Bayesian Adaptive Direct Search (BADS): https://github.com/lacerbi/bads 
+
 % For now we are going to run the optimization only once, but in general you 
 % should always run the optimization from multiple distinct starting points.
 
@@ -158,7 +165,8 @@ close all;
 figure(1);
 plot_psychometric_data(data,session_num);
 hold on;
-psychofun_plot(theta);
+p_right = psychofun(theta,stim);   % Compute psychometric function values
+plot(stim,p_right,'LineWidth',1,'Color','k','DisplayName','model');
 legend('Location','NorthWest','Box','off','FontSize',12);
 text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
 

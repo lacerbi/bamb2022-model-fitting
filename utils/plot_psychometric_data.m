@@ -28,7 +28,7 @@ for idx = 1:numel(signed_contrasts_levels)
     right_resp(idx) = sum((signed_constrasts == signed_contrasts_levels(idx)) & (response_choice == 1));
 end
 frac_resp = right_resp ./ (left_resp + right_resp);
-err_bar = sqrt(frac_resp.*(1-frac_resp)./(left_resp + right_resp)); % Why this formula for error bars?
+err_bar = 1.96*sqrt(frac_resp.*(1-frac_resp)./(left_resp + right_resp)); % Why this formula for error bars?
 
 % Make error bar plot
 errorbar(signed_contrasts_levels,frac_resp,err_bar,'LineWidth',1,'DisplayName','data');

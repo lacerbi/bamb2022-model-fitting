@@ -99,8 +99,7 @@ session_data = data(data(:,2) == session_num,:);
 ll = psychofun_loglike(theta0,session_data);
 % print('Log-likelihood value: ' + "{:.3f}".format(ll))
 
-close all;
-figure(1);
+figure(1); hold off;
 plot_psychometric_data(data,session_num);
 hold on;
 p_right = psychofun(theta0,stim);   % Compute psychometric function values
@@ -146,32 +145,44 @@ opt_fun = @(theta_) -psychofun_loglike(theta_,session_data);
 % For now we are going to run the optimization only once, but in general you 
 % should always run the optimization from multiple distinct starting points.
 
-% Generate random starting point inside the plausible box
-theta0 = rand(1,D).*(pub-plb) + plb;
+fprintf('\nOptimization using Bayesian Adaptive Direct Search (BADS):\n');
 
 % Set BADS options
 options = bads('defaults');
 options.Display = 'iter';
 
-% Run optimization
-fprintf('\nOptimization using Bayesian Adaptive Direct Search (BADS):\n');
-[theta,fval,~,output] = bads(opt_fun,theta0,lb,ub,plb,pub,options);
+% Run multiple optimization runs, take the best
+Nruns = 3;
+for iRun = 1:Nruns
+    fprintf('Run %d:\n', iRun)
+    % Generate random starting point inside the plausible box
+    theta0 = rand(1,D).*(pub-plb) + plb;
+    [theta(iRun,:),fval(iRun),~,output{iRun}] = bads(opt_fun,theta0,lb,ub,plb,pub,options);
+end
 
-fprintf('Returned parameter vector: %s\n', mat2str(theta,3));
-fprintf('Negative log-likelihood at solution: %s\n', num2str(fval));
-fprintf('Total # function evaluations: %d\n', output.funccount);
+% Plot all results
+fval
+
+pause
+
+% Index of the best run (lowest negative log-likelihood)
+[~,bestrun] = min(fval);
+
+fprintf('Returned best parameter vector: %s\n', mat2str(theta(bestrun,:),3));
+fprintf('Negative log-likelihood at best solution: %s\n', num2str(fval(bestrun)));
+fprintf('Total # function evaluations (best run): %d\n', output{bestrun}.funccount);
 
 close all;
 figure(1);
 plot_psychometric_data(data,session_num);
 hold on;
-p_right = psychofun(theta,stim);   % Compute psychometric function values
+p_right = psychofun(theta(bestrun,:),stim);   % Compute psychometric function values
 plot(stim,p_right,'LineWidth',1,'Color','k','DisplayName','model');
 legend('Location','NorthWest','Box','off','FontSize',12);
 text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% V. Maximum-likelihood estimation with other optimizers
+%% IV b. Maximum-likelihood estimation with other optimizers
 
 % While BADS is a good general-purpose optimization algorithm, you may want
 % to try other ones. Here we try fmincon.
@@ -180,12 +191,12 @@ text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
 options = optimoptions('fmincon');
 options.Display = 'iter';
 
-% Run optimization
+% Run optimization (only once here, you should do more runs!)
 fprintf('\nOptimization using FMINCON:\n');
-[theta,fval,~,output] = fmincon(opt_fun,theta0,[],[],[],[],lb,ub,[],options);
+[theta_fmincon,fval_fmincon,~,output_fmincon] = fmincon(opt_fun,theta0,[],[],[],[],lb,ub,[],options);
 
-fprintf('Returned parameter vector: %s\n', mat2str(theta,3));
-fprintf('Negative log-likelihood at solution: %s\n', num2str(fval));
-fprintf('Total # function evaluations: %d\n', output.funcCount);
+fprintf('Returned parameter vector: %s\n', mat2str(theta_fmincon,3));
+fprintf('Negative log-likelihood at solution: %s\n', num2str(fval_fmincon));
+fprintf('Total # function evaluations: %d\n', output_fmincon.funcCount);
 
 

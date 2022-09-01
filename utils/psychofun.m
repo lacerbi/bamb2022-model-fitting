@@ -2,7 +2,7 @@ function p_right = psychofun(theta,stim)
 %PSYCHOFUN Psychometric function based on normal CDF and lapses.
 
 mu = theta(1);              % bias
-sigma = theta(2);           % slope/noise
+sigma = theta(2);           % threshold (slope/noise)
 lapse = theta(3);           % lapse rate
 if numel(theta) == 4
     lapse_bias = theta(4);  % lapse bias

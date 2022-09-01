@@ -44,7 +44,7 @@ data(1:5,:)
 %% I. Bayesian inference "by hand"
 
 % As a first exercise, we fix the parameters of our psychometric function 
-% model except for one, and derive a (one-dimensional) posterior 
+% model except for one, and calculate a (one-dimensional) posterior 
 % distribution for the free parameter, given the other parameters. 
 %
 % Here we take sigma as the free parameter and fix the others.
@@ -56,19 +56,18 @@ lambda_star = 0.26;     % lapse_rate
 gamma_star = 0.54;      % lapse_bias
 
 % We define hard lower/upper bounds for sigma
-lb = 1;
-ub = 100;
+lb = 1; ub = 100;
 
 % Define a grid for sigma
 sigma_range = linspace(0, ub + 1, 1001);
 dsigma = sigma_range(2) - sigma_range(1);   % Grid spacing
 
 % Define the prior over sigma as a uniform box between lb and ub (0 outside)
-%prior_pdf = 1/(ub - lb) * ((sigma_range >= lb) & (sigma_range <= ub));
+prior_pdf = 1/(ub - lb) * ((sigma_range >= lb) & (sigma_range <= ub));
 
 % Just to see what happens: change the prior to a (truncated) Gaussian
-prior_pdf = normpdf(sigma_range,5,6) .* ((sigma_range >= lb) & (sigma_range <= ub));
-prior_pdf = prior_pdf ./ (sum(prior_pdf)*dsigma);   % Normalize
+%prior_pdf = normpdf(sigma_range,5,6) .* ((sigma_range >= lb) & (sigma_range <= ub));
+%prior_pdf = prior_pdf ./ (sum(prior_pdf)*dsigma);   % Normalize
 
 % Plot prior pdf
 figure;
@@ -145,7 +144,7 @@ D = numel(lb);
 
 % Let's plot the prior for each dimension
 parameter_names{1} = 'bias (\mu)';
-parameter_names{2} = 'slope/noise (\sigma)';
+parameter_names{2} = 'threshold (\sigma)';
 parameter_names{3} = 'lapse rate (\lambda)';
 parameter_names{4} = 'lapse bias (\gamma)';
 
@@ -163,6 +162,7 @@ for d = 1:D
     box off;
 end
 set(gcf,'Color','w');
+pause;
 
 % Alternatively, for each parameter we define the prior to be flat within 
 % the plausible range, and then falls to zero towards the hard bounds. This
@@ -180,6 +180,7 @@ for d = 1:D
     box off;
 end
 set(gcf,'Color','w');
+pause;
 
 % As above, but we impose smooth transitions (using splines), which are 
 % both nicer and better behaved numerically (no sharp edges).
@@ -238,22 +239,37 @@ options.Plot = 'on';
 % - output: a struct with information about the run
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% IV. Plot prediction
+%% IV. Posterior usages: visualization, uncertainty, prediction
 
 close all;
 
-% First, let's visualize the posterior
-Nsamples = 1e5;
-thetas = vbmc_rnd(vp,Nsamples);
-cornerplot(thetas,parameter_names);
+% First, let's visualize the posterior - sampling from the variational
+% posterior is very easy (the posterior is a mixture of Gaussians)
+Nsamples = 1e5;                     % How many samples
+thetas = vbmc_rnd(vp,Nsamples);     % Sample from the variational posterior
+cornerplot(thetas,parameter_names); % Plot samples
+
+pause
+
+% We can use samples from the posterior to calculate/report uncertainty
+for d = 1:D
+    fprintf('%s: Mean: %.2f, Median %.2f, Std %.2f, 95%% CI [%.2f, %.2f]\n', ...
+        parameter_names{d}, mean(thetas(:,d)), median(thetas(:,d)), std(thetas(:,d)), ...
+        quantile(thetas(:,d), 0.025), quantile(thetas(:,d), 0.975));
+end
+
+% We could also look at other summary statistics of the posterior, such as
+% correlations between parameters, etc.
+    
+pause
+
+% Finally, we plot posterior predictions (the "Bayesian fit"), also known
+% as "posterior predictive check" (we check that our fit matches the data!)
 
 % Plot data first
 figure(2);
 plot_psychometric_data(data,session_num);
 
-% Get random samples from the posterior
-Nsamples = 1e4;
-thetas = vbmc_rnd(vp,Nsamples);
 % Compute psychometric function values for each sample
 stim = linspace(-100,100,201);
 p_right = zeros(Nsamples,201); 
@@ -262,6 +278,7 @@ median_pred = quantile(p_right,0.5,1);  % Median prediction
 bottom_pred = quantile(p_right,0.025,1);  % Bottom 2.5% prediction
 top_pred = quantile(p_right,0.975,1);     % Top 97.5% prediction
 
+% Plot median and 95% CI (as shaded area) of the posterior prediction
 hold on;
 patch([stim,fliplr(stim)],[bottom_pred,fliplr(top_pred)],'k','EdgeColor','none','FaceAlpha',0.2);
 plot(stim,median_pred,'LineWidth',1,'Color','k','DisplayName','model');

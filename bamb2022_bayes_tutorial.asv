@@ -181,8 +181,7 @@ for d = 1:D
 end
 set(gcf,'Color','w');
 
-% As above, but we impose smooth transitions (using splines), which are 
-% both nicer and better behaved numerically (no sharp edges).
+% As above, but we impose smooth transitions (using splines). 
 % The provided `msplinetrapezpdf` function implements this kind of prior.
 
 figure(3);
@@ -197,12 +196,9 @@ for d = 1:D
 end
 set(gcf,'Color','w');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% III. Running Bayesian inference
 
-% Pick session data
-session_num = 12;
-session_data = data(data(:,2) == session_num,:);
+
+
 
 % Define the smoothed trapezoidal prior
 prior_fun = @(theta_) msplinetrapezpdf(theta_,lb,plb,pub,ub);
@@ -210,7 +206,14 @@ prior_fun = @(theta_) msplinetrapezpdf(theta_,lb,plb,pub,ub);
 % Alternatively, this implements a uniform prior
 % prior_fun = @(theta_) munifboxpdf(theta_,lb,ub);
 
-% Define objective function: log-joint (log likelihood + log prior)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% III. Running Bayesian inference
+
+% Pick session data
+session_num = 12;
+session_data = data(data(:,2) == session_num,:);
+
+% Define objective function: log-joint
 fun = @(theta_) psychofun_loglike(theta_,session_data) + log(prior_fun(theta_));
 
 % Generate random starting point inside the plausible box

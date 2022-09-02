@@ -7,13 +7,14 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 **Lecturer:** [Luigi Acerbi](https://www.helsinki.fi/en/researchgroups/machine-and-human-intelligence), [@AcerbiLuigi](https://twitter.com/AcerbiLuigi) (University of Helsinki).
 
 - To run the tutorials, download / clone the repository locally.
+- Ensure that the BADS and VBMC toolboxes are installed (see below).
 - **Introduction to Optimization for Statistical Model fitting:** [slides](acerbi-optimization-BAMB-sep2022.pdf), [code](bamb2022_optimization_tutorial.m).
 - **Introduction to Bayesian Inference for Statistical Model fitting:** [slides](acerbi-bayes-BAMB-sep2022.pdf), [code](bamb2022_bayes_tutorial.m).
 - **Visualization of optimization algorithms:** https://github.com/lacerbi/optimviz
 
 ### Toolboxes for model fitting
 
-The tutorials use the following open-source MATLAB toolboxes. For your convenience, they are already included in this repo:
+The tutorials use the following open-source MATLAB toolboxes. You will need to install them from here:
 - *Bayesian Adaptive Direct Search* (BADS) optimization algorithm: https://github.com/lacerbi/bads
 - *Variational Bayesian Monte Carlo* (VBMC) inference algorithm: https://github.com/lacerbi/vbmc
 

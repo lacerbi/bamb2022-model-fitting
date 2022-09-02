@@ -7,5 +7,5 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 **Lecturer:** [Luigi Acerbi](https://www.helsinki.fi/en/researchgroups/machine-and-human-intelligence).
 
 - To run the tutorials, download / clone the repository locally.
-- `bamb2022_optimization_tutorial.m` contains the tutorial for the Introduction to Optimization for Statistical Model fitting.
-- `bamb2022_bayes_tutorial.m` contains the tutorial for the Introduction to Bayesian Inference for Statistical Model fitting.
+- **Introduction to Optimization for Statistical Model fitting:** [slides](), [code](https://github.com/lacerbi/bamb2022-model-fitting/blob/main/bamb2022_optimization_tutorial.m).
+- **Introduction to Bayesian Inference for Statistical Model fitting:** [slides](acerbi-bayes-BAMB-sep2022.pdf), [code](bamb2022_bayes_tutorial.m).

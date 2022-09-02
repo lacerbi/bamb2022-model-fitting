@@ -10,6 +10,12 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 - **Introduction to Optimization for Statistical Model fitting:** [slides](acerbi-optimization-BAMB-sep2022.pdf), [code](bamb2022_optimization_tutorial.m).
 - **Introduction to Bayesian Inference for Statistical Model fitting:** [slides](acerbi-bayes-BAMB-sep2022.pdf), [code](bamb2022_bayes_tutorial.m).
 
+### Toolboxes
+
+The tutorials use the following open-source toolboxes. For your convenience, they are already included in this repo:
+- *Bayesian Adaptive Direct Search* (BADS) optimization algorithm: https://github.com/lacerbi/bads
+- *Variational Bayesian Monte Carlo* (VBMC) inference algorithm: https://github.com/lacerbi/vbmc
+
 ### License
 
 Unless stated otherwise, the material in this repo is released under the [MIT License](LICENSE).

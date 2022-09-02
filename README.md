@@ -4,7 +4,7 @@
 
 Tutorials on statistical model fitting (optimization and Bayesian inference) for Day 2 of the [BAMB! 2022 summer school](https://www.bambschool.org/) for advanced modeling of behavior.
 
-**Lecturer:** [Luigi Acerbi](https://www.helsinki.fi/en/researchgroups/machine-and-human-intelligence) (University of Helsinki).
+**Lecturer:** [Luigi Acerbi](https://www.helsinki.fi/en/researchgroups/machine-and-human-intelligence), [@AcerbiLuigi](https://twitter.com/AcerbiLuigi) (University of Helsinki).
 
 - To run the tutorials, download / clone the repository locally.
 - **Introduction to Optimization for Statistical Model fitting:** [slides](acerbi-optimization-BAMB-sep2022.pdf), [code](bamb2022_optimization_tutorial.m).

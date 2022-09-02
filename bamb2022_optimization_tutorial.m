@@ -3,9 +3,9 @@
 % by Luigi Acerbi (2022)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Add utility folder to MATLAB path
+clear;
+% Add utility folders to MATLAB path
 baseFolder = fileparts(which('bamb2022_optimization_tutorial.m'));
-addpath([baseFolder,filesep(),'bads']);
 addpath([baseFolder,filesep(),'utils']);
 
 % During this tutorial, we are going to use data from the International 
@@ -147,6 +147,13 @@ opt_fun = @(theta_) -psychofun_loglike(theta_,session_data);
 
 fprintf('\nOptimization using Bayesian Adaptive Direct Search (BADS):\n');
 
+% Check that BADS is installed (and on the MATLAB path)
+test = which('bads');
+if isempty(test)
+    error(['To run this part of the tutorial, you need to install ' ...
+        '<a href = "https://github.com/lacerbi/bads">Bayesian Adaptive Direct Search (BADS)</a>.']);
+end
+
 % Set BADS options
 options = bads('defaults');
 options.Display = 'iter';
@@ -179,7 +186,7 @@ hold on;
 p_right = psychofun(theta(bestrun,:),stim);   % Compute psychometric function values
 plot(stim,p_right,'LineWidth',1,'Color','k','DisplayName','model');
 legend('Location','NorthWest','Box','off','FontSize',12);
-text(-100,0.7,['Log-likelihood: ' num2str(ll)],'FontSize',12);
+text(-100,0.7,['Log-likelihood: ' num2str(-fval(bestrun))],'FontSize',12);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% IV b. Maximum-likelihood estimation with other optimizers

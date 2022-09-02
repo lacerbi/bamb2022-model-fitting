@@ -8,16 +8,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Load mouse behavioral data
 
+clear;
+% Add utility folders to MATLAB path
+baseFolder = fileparts(which('bamb2022_bayes_tutorial.m'));
+addpath([baseFolder,filesep(),'utils']);
+
 % Like the optimization tutorial, we will use data from the International 
 % Brain Laboratory (IBL; https://www.internationalbrainlab.com/) publicly 
 % released behavioral mouse dataset (training data of mouse `KS014`). See 
 % The IBL et al. (2021) https://elifesciences.org/articles/63711 for info.
-
-% Add utility folder to MATLAB path
-baseFolder = fileparts(which('bamb2022_bayes_tutorial.m'));
-addpath([baseFolder,filesep(),'bads']);
-addpath([baseFolder,filesep(),'vbmc']);
-addpath([baseFolder,filesep(),'utils']);
 
 filename = './data/KS014_train.csv';
 data = csvread(filename,1);
@@ -218,12 +217,28 @@ fun = @(theta_) psychofun_loglike(theta_,session_data) + log(prior_fun(theta_));
 theta0 = rand(1,D).*(pub-plb) + plb;
 
 % Get the maximum-a-posteriori (MAP) estimate using BADS
-options = bads('defaults');
-options.Display = 'iter';
-theta_MAP = bads(@(x) -fun(x),theta0,lb,ub,plb,pub,options);
+
+% Check that BADS is installed (and on the MATLAB path)
+test = which('bads');
+if ~isempty(test)
+    options = bads('defaults');
+    options.Display = 'iter';
+    theta_MAP = bads(@(x) -fun(x),theta0,lb,ub,plb,pub,options);
+else
+    % BADS not installed, use fmincon
+    options.Display = 'iter';
+    theta_MAP = fmincon(@(x) -fun(x),theta0,[],[],[],[],lb,ub,[],options);
+end
 
 % Run inference using Variational Bayesian Monte Carlo (VBMC):
 % https://github.com/lacerbi/vbmc
+
+% Check that VBMC is installed (and on the MATLAB path)
+test = which('vbmc');
+if isempty(test)
+    error(['To run this part of the tutorial, you need to install ' ...
+        '<a href = "https://github.com/lacerbi/vbmc">Variational Bayesian Monte Carlo (VBMC)</a>.']);
+end
 
 % We start the algorithm from the MAP (not necessary but it helps)
 options = vbmc('defaults');

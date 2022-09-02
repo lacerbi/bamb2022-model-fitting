@@ -12,4 +12,4 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 
 ### License
 
-Unless stated otherwise, the material in this repo is released under the [MIT license](LICENSE).
+Unless stated otherwise, the material in this repo is released under the [MIT License](LICENSE).

@@ -11,7 +11,7 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 - **Introduction to Bayesian Inference for Statistical Model fitting:** [slides](acerbi-bayes-BAMB-sep2022.pdf), [code](bamb2022_bayes_tutorial.m).
 - **Visualization of optimization algorithms:** https://github.com/lacerbi/optimviz
 
-### Toolboxes
+### Toolboxes for model fitting
 
 The tutorials use the following open-source toolboxes. For your convenience, they are already included in this repo:
 - *Bayesian Adaptive Direct Search* (BADS) optimization algorithm: https://github.com/lacerbi/bads

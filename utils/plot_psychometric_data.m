@@ -42,7 +42,19 @@ end
 xlim([-105,105]);
 ylim([0,1]);
 
+Nc = numel(signed_contrasts_levels);
+for i = 1:Nc
+    xticklabel{i} = num2str(signed_contrasts_levels(i));
+end
+
+% Thin x ticks labels around 0 if too dense (ad hoc)
+if Nc >= 9
+    xticklabel{(Nc+1)/2-1} = [];
+    xticklabel{(Nc+1)/2+1} = [];
+end
+
 set(gca,'XTick', signed_contrasts_levels);
+set(gca,'XTickLabel',xticklabel);
 set(gca,'TickDir','out','FontSize',axisfontsize);
 box off;
 set(gcf,'Color','w');

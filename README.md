@@ -2,7 +2,7 @@
 
 ![bamb-logo](https://github.com/lacerbi/bamb2022-model-fitting/blob/main/figs/bamb-logo.png?raw=true)
 
-Tutorials on statistical model fitting (optimization and Bayesian inference) for Day 2 of the [BAMB! 2022 summer school](https://www.bambschool.org/) for advanced modeling of behavior.
+Tutorials on statistical model fitting (optimization and Bayesian inference) for Day 2 of the [BAMB! 2022 summer school](https://www.bambschool.org/) for advanced modeling of behavior. The provided tutorials are in MATLAB, but the content is language-independent.
 
 **Lecturer:** [Luigi Acerbi](https://www.helsinki.fi/en/researchgroups/machine-and-human-intelligence), [@AcerbiLuigi](https://twitter.com/AcerbiLuigi) (University of Helsinki).
 
@@ -13,7 +13,7 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 
 ### Toolboxes for model fitting
 
-The tutorials use the following open-source toolboxes. For your convenience, they are already included in this repo:
+The tutorials use the following open-source MATLAB toolboxes. For your convenience, they are already included in this repo:
 - *Bayesian Adaptive Direct Search* (BADS) optimization algorithm: https://github.com/lacerbi/bads
 - *Variational Bayesian Monte Carlo* (VBMC) inference algorithm: https://github.com/lacerbi/vbmc
 

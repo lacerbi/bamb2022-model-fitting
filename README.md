@@ -9,3 +9,7 @@ Tutorials on statistical model fitting (optimization and Bayesian inference) for
 - To run the tutorials, download / clone the repository locally.
 - **Introduction to Optimization for Statistical Model fitting:** [slides](acerbi-optimization-BAMB-sep2022.pdf), [code](bamb2022_optimization_tutorial.m).
 - **Introduction to Bayesian Inference for Statistical Model fitting:** [slides](acerbi-bayes-BAMB-sep2022.pdf), [code](bamb2022_bayes_tutorial.m).
+
+### License
+
+Unless stated otherwise, the material in this repo is released under the [MIT license](LICENSE).
